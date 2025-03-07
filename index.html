@@ -20,18 +20,29 @@
     </style>
 </head>
 <body>
-    <video id="video" playsinline></video>
-    
+    <video id="video" playsinline muted loop>
+        <source src="sunsetvideo.webm" type="video/webm">
+        Your browser does not support the video tag.
+    </video>
+
     <script>
         const video = document.getElementById("video");
-        video.src = "sunsetvideo.webm"; // Ensure this file is in the same GitHub repo
-        video.playbackRate = 1;
-        video.muted = true; // Remove if you want audio
+
+        // Ensure video loads properly
+        video.load();
         video.play();
-        
+
         video.addEventListener("ended", function() {
-            video.playbackRate *= -1; // Reverse playback
+            video.currentTime = video.duration; // Go to end
+            video.playbackRate = -1; // Reverse playback
             video.play();
+        });
+
+        video.addEventListener("timeupdate", function() {
+            if (video.currentTime <= 0 && video.playbackRate < 0) {
+                video.playbackRate = 1; // Play forward again
+                video.play();
+            }
         });
     </script>
 </body>
